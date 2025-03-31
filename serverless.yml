@@ -1,0 +1,86 @@
+service: chaos-fis-lambda-serverless
+frameworkVersion: '3'
+
+useDotenv: true
+
+provider:
+  name: aws
+  tracing:
+    lambda: true
+  runtime: nodejs20.x
+  region: ${opt:region, 'us-east-1'}
+  stage: ${opt:stage, 'dev'}
+  stackName: ${self:service}-${self:custom.config.envName, opt:stage}
+  cfnRole: arn:aws:iam::${aws:accountId}:role/AdskCfnAdministratorAccessExecutionRole
+
+custom:
+  baseAppName: chaosfis
+  lowerCaseStage: ${lower(${self:provider.stage})}
+  config: ${file(./environments/${self:provider.region}/${self:custom.lowerCaseStage}.yml)}
+  hello: ${self:provider.region}
+  deploymentBucket:
+    name: '${self:service}-deployments-${self:provider.region}-${aws:accountId}'
+    policy:
+      Version: '2008-10-17'
+      Statement:
+        - Effect: Deny
+          Principal: '*'
+          Action: s3:*
+          Resource:
+            - arn:aws:s3:::${self:service}-deployments-${aws:region}-${aws:accountId}/*
+            - arn:aws:s3:::${self:service}-deployments-${aws:region}-${aws:accountId}
+          Condition:
+            Bool:
+              aws:SecureTransport: 'false'
+    blockPublicAccess: true
+    skipPolicySetup: false
+    versioning: true
+    tags:
+      - Key: STAGE
+        Value: ${self:provider.stage}
+      - Key: adsk:moniker
+        Value: ${self:custom.config.moniker}
+    debug: true
+  prune:
+    automatic: true
+    includeLayers: true
+    number: 3
+package:
+  individually: true
+
+functions:
+  hello:
+    name: ${self:service}-hello
+    tracing: Active
+    handler: src/hello/index.handler
+    layers:
+      - ${self:custom.config.fisLayer}
+    package:
+      include:
+        - src/common/**
+        - src/hello/**
+    memorySize: 512
+    timeout: 30
+    reservedConcurrency: ${self:custom.config.lambda-hello-reservedConcurrency, 5}
+    role: HelloLambdaRole
+    environment:
+      AWS_FIS_CONFIGURATION_LOCATION: !Sub 'arn:aws:s3:::${self:service}-config-${AWS::Region}-${AWS::AccountId}/FisConfigs/'
+      AWS_LAMBDA_EXEC_WRAPPER: /opt/aws-fis/bootstrap
+      AWS_FIS_LOG_LEVEL: DEBUG
+      AWS_FIS_EXTENSION_METRICS: all
+    events:
+      - http:
+          path: 'hello'
+          method: GET
+          cors: true
+
+resources:
+  - ${file(./resources/role-hello-lambda.yml)}
+  - ${file(./resources/fis-s3.yml)}
+  - ${file(./resources/role-fis.yml)}
+
+plugins:
+  - serverless-esbuild
+  - serverless-deployment-bucket
+  - serverless-prune-versions
+  - serverless-plugin-utils

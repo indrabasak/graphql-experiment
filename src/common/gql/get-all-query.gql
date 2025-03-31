@@ -1,0 +1,64 @@
+query getApplicationsMetadata {
+	getApplicationsMetadata {
+		appId
+		code
+		division
+		name
+		owner
+		source
+		status
+		tier
+		type
+		cloudProviders
+	}
+	getApplicationsXtra {
+		appId
+		repos
+		jiraQuery
+		tmWiki
+		compliance
+	}
+
+	getApplicationsCloudAccounts {
+		appId
+		accounts
+	}
+
+	getApplicationsOwners {
+		appId
+		division
+		leaders
+		owner
+	}
+
+	getApplicationsStats {
+		appId
+		mttr
+		rpo
+		rto
+		slo
+	}
+
+	getApplicationsPrivacyIssuesCounts {
+		appId
+		dlmCount
+		dpmCount
+		ppeCount
+		tcCount
+		viuCount
+	}
+
+	getApplicationsSecurityIssuesCounts {
+		appId
+		eaCount
+		epCount
+		hdCount
+		iamCount
+		lgCount
+		scCount
+		stCount
+		tcmCount
+		tmCount
+		vmCount
+	}
+}

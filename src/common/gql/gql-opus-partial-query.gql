@@ -1,0 +1,26 @@
+query getApplicationsMetadata {
+	getApplicationsMetadata {
+		appId
+		code
+		division
+		name
+		source
+		status
+		tier
+		type
+	}
+
+	getApplicationsStats {
+		appId
+		mttr
+		rpo
+		rto
+		slo
+		resiliencyRisk
+	}
+
+	getApplicationsSecurityIssuesCounts {
+		appId
+		vmCount
+	}
+}

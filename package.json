@@ -1,0 +1,41 @@
+{
+  "name": "chaos-fis-lambda-serverless",
+  "version": "1.0.0",
+  "description": "A sample project for GraphQL client examples",
+  "license": "ISC",
+  "author": "Indra Basak",
+  "packageManager": "yarn@1.22.22",
+  "scripts": {
+    "dist:util": "rm -rf dist && yarn build:util && yarn build:layer && cp -r src/common/gql dist/util/common/gql",
+    "build:util": "tsc --project src/util",
+    "build:layer": "mkdir -p dist/lambda-functions/layer/nodejs && cp package.json yarn.lock dist/lambda-functions/layer/nodejs && cd dist/lambda-functions/layer/nodejs && yarn install --prod --frozen-lockfile",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.9",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-typescript": "^7.26.0",
+    "@types/aws-lambda": "^8.10.147",
+    "@types/node": "^22.13.4",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
+    "esbuild": "^0.25.1",
+    "eslint": "^9.20.1",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.1",
+    "serverless-deployment-bucket": "^1.6.0",
+    "serverless-esbuild": "^1.55.0",
+    "serverless-plugin-utils": "^0.2.0",
+    "serverless-prune-versions": "^1.0.4",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@aws-lambda-powertools/logger": "^2.14.0",
+    "axios": "^1.8.4",
+    "axios-retry": "^4.5.0",
+    "fs": "^0.0.1-security"
+  }
+}
