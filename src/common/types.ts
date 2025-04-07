@@ -9,6 +9,7 @@ export interface TrustDataBody {
     getApplicationsMetadata: Array<TrustData>;
     getApplicationsStats: Array<ApplicationStatDataItem>;
     getApplicationsSecurityIssuesCounts: Array<ApplicationSecurityIssueCountItem>;
+    getApplicationsXtra: Array<ApplicationsXtraItem>;
   };
 }
 
@@ -26,6 +27,7 @@ export interface TrustData {
   slo: string | null;
   resiliencyRisk: string | null;
   spIssues: number;
+  repos: string | null;
 }
 
 export interface ApplicationStatDataItem {
@@ -40,4 +42,44 @@ export interface ApplicationStatDataItem {
 export interface ApplicationSecurityIssueCountItem {
   appId: string;
   vmCount: string;
+}
+
+export interface ApplicationsXtraItem {
+  appId: string;
+  repos: string | null;
+}
+
+///////////////////
+export interface BpmDataItem {
+  bpmDate: string;
+  id: string;
+  primaryService: string;
+  categories: string;
+  incidentType: string;
+  detection_source: string;
+  fyQtr: string;
+  status: string;
+}
+
+export interface BpmDataBody {
+  data: {
+    getBPMTracker: {
+      LastEvaluatedKey: {
+        partitionKey: string;
+        sortKey: string;
+      };
+      Items: Array<BpmDataItem>;
+    };
+  };
+}
+
+export interface PrimaryServiceItem {
+  value: string;
+  text: string;
+  service_id: string;
+  service_alias: string;
+}
+
+export interface ServiceDataItem extends TrustData {
+  mcirCount: number;
 }

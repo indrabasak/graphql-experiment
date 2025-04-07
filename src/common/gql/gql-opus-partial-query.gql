@@ -23,4 +23,9 @@ query getApplicationsMetadata {
 		appId
 		vmCount
 	}
+
+	getApplicationsXtra {
+	    appId
+    	repos
+    }
 }
