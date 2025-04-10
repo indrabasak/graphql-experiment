@@ -1,0 +1,21 @@
+query($closedCases: Boolean, $lastEvaluatedKey: LastEvaluatedKey) {
+  getBPMTracker(
+    closedCases: $closedCases,
+    LastEvaluatedKey: $lastEvaluatedKey
+  ) {
+    LastEvaluatedKey {
+      partitionKey
+      sortKey
+    }
+    Items {
+      id
+      bpmDate
+      primaryService
+      categories
+      incidentType
+      detection_source
+      fyQtr
+      status
+    }
+  }
+}

@@ -3,7 +3,7 @@ import axiosRetry, { isNetworkOrIdempotentRequestError, isRetryableError } from 
 import { appLogger } from './logger';
 
 export class HttpUtil {
-  private logger = appLogger('common/http-util').createChild();
+  private logger = appLogger.child({ executor: 'common/http-util' });
   private readonly client: AxiosInstance;
 
   constructor(defaultConfig: CreateAxiosDefaults) {

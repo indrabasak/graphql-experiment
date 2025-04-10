@@ -1,16 +1,17 @@
-import { Logger } from '@aws-lambda-powertools/logger';
-import { LogLevel } from '@aws-lambda-powertools/logger/types';
+const { createLogger, format, transports } = require('winston');
 
-export const appLogger = (marker: string) => {
-  console.log(
-    `%%%%%%%%%%%%%%%% appLogger called by ${marker} in ${process.env.AWS_LAMBDA_FUNCTION_NAME}`
-  );
-  return new Logger({
-    serviceName: process.env.AWS_LAMBDA_FUNCTION_NAME,
-    logLevel: (process.env.LOG_LEVEL as LogLevel) || 'INFO',
-    persistentLogAttributes: {
-      env: process.env.APP_ENV,
-      region: process.env.AWS_REGION
-    }
-  });
-};
+const { combine, json, splat, timestamp } = format;
+
+const logLevel = process.env.LOG_LEVEL || 'info';
+export const appLogger = createLogger({
+  level: process.env.NODE_DEBUG ? 'debug' : logLevel,
+  format: combine(timestamp(), splat(), json()),
+  transports: [new transports.Console()],
+  defaultMeta: {
+    service: 'sage',
+    region: process.env.AWS_REGION,
+    type: 'lambda',
+    process: process.env.AWS_LAMBDA_FUNCTION_NAME,
+    env: process.env.APP_ENVIRONMENT
+  }
+});

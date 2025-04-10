@@ -8,6 +8,8 @@
   "scripts": {
     "dist:util": "rm -rf dist && yarn build:util && yarn build:layer && cp -r src/common/gql dist/util/common/gql",
     "build:util": "tsc --project src/util",
+    "dist:analytics": "rm -rf dist && yarn build:analytics && cp -r src/common/gql dist/analytics/common/gql",
+    "build:analytics": "tsc --project src/analytics",
     "build:layer": "mkdir -p dist/lambda-functions/layer/nodejs && cp package.json yarn.lock dist/lambda-functions/layer/nodejs && cd dist/lambda-functions/layer/nodejs && yarn install --prod --frozen-lockfile",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix"
@@ -33,9 +35,9 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@aws-lambda-powertools/logger": "^2.14.0",
     "axios": "^1.8.4",
     "axios-retry": "^4.5.0",
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "winston": "^3.17.0"
   }
 }
